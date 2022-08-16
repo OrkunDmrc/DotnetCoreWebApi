@@ -7,17 +7,17 @@ using WebApi.Common;
 namespace WebApi.BookOperations{
     public class GetById{
         private readonly BookStoreDbContext _context;
-
+        public GetByIdModel Model { get; set; }
         public GetById(BookStoreDbContext context)
         {
             _context = context;
         }
 
-        public GetByIdModel Handle(int Id){
-            if(_context.Books.SingleOrDefault(b => b.Id == Id) is null){
+        public GetByIdModel Handle(){
+            if(_context.Books.SingleOrDefault(b => b.Title == Model.Title) is null){
                 throw new InvalidOperationException("Kitap bulunamadı");
             }
-            var book = _context.Books.Find(Id);
+            var book = _context.Books.SingleOrDefault(b => b.Title == Model.Title);
             return new GetByIdModel{
                 Title = book.Title,
                 GenreId = book.GenreId,

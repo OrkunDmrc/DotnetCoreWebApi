@@ -3,25 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using WebApi.DbOperations;
 using WebApi.Common;
+using AutoMapper;
 
 namespace WebApi.BookOperations.CreateBook{
     public class CreateBookCommand{
         public CreateBookModel Model { get; set; }
         private readonly BookStoreDbContext _context;
-        public CreateBookCommand(BookStoreDbContext context)
+        private readonly IMapper _mapper;
+        public CreateBookCommand(BookStoreDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public void Handle(){
             if(_context.Books.SingleOrDefault(b => b.Title == Model.Title) is not null){
                 throw new InvalidOperationException("Aynı adda kitap mevcut");
             }
-            var book = new Book {
+            /*var book = new Book {
                 Title = Model.Title,
                 GenreId = Model.GenreId,
                 PageCount = Model.PageCount,
                 PublishDate = Model.PublishDate
-            };
+            };*/
+            //artık yukarıdaki kodlara ihtiyacımız yok çünkü AutoMapper bunu bizim için halledicek. Aşağıdaki kod onu sağlamaktadır.
+            var book = _mapper.Map<Book>(Model);
             _context.Books.Add(book);
             _context.SaveChanges();
         }

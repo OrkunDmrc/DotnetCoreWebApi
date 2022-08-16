@@ -7,19 +7,20 @@ using WebApi.Common;
 namespace WebApi.BookOperations.UpdateBook{
     public class UpdateBook{
         private readonly BookStoreDbContext _context;
+        public UpdateBookModel Model { get; set;}
         public UpdateBook(BookStoreDbContext context)
         {
             _context = context;
         }
-        public void Handle(UpdateBookModel updateBookModel){
-            if(_context.Books.SingleOrDefault(b => b.Id == updateBookModel.Id) is null){
+        public void Handle(){
+            if(_context.Books.SingleOrDefault(b => b.Id == Model.Id) is null){
                 throw new InvalidOperationException("Güncellenecek kitap bulunamadı");
             }
-            var book = _context.Books.Find(updateBookModel.Id);
-            book.Title = updateBookModel.Title;
-            book.GenreId = updateBookModel.GenreId;
-            book.PageCount = updateBookModel.PageCount;
-            book.PublishDate = updateBookModel.PublishDate;
+            var book = _context.Books.Find(Model.Id);
+            book.Title = Model.Title;
+            book.GenreId = Model.GenreId;
+            book.PageCount = Model.PageCount;
+            book.PublishDate = Model.PublishDate;
             _context.SaveChanges();
         }
     }
