@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using WebApi.DbOperations;
 using WebApi.Common;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
-namespace WebApi.BookOperations.GetBook{
+namespace WebApi.Application.BookOperations.Queries.GetBook{
     public class GetBooksQuery{
         private readonly BookStoreDbContext _context;
-        public GetBooksQuery(BookStoreDbContext context)
+        private readonly IMapper _mapper;
+        public GetBooksQuery(BookStoreDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public override bool Equals(object? obj)
@@ -23,13 +27,8 @@ namespace WebApi.BookOperations.GetBook{
         }
 
         public List<BookViewModel> Handle(){
-            var bookList = _context.Books.OrderBy(b => b.Id).ToList();
-            List<BookViewModel> bookViewModels = bookList.Select(b => new BookViewModel{
-                Title = b.Title,
-                Genre = ((GenreEnum)b.GenreId).ToString(),
-                PageCount = b.PageCount,
-                PublishDate = b.PublishDate.Date.ToString("dd/mm/yyyy")
-            }).ToList();
+            var bookList = _context.Books.Include(b => b.Genre).Include(b => b.Author).OrderBy(b => b.Id).ToList();
+            List<BookViewModel> bookViewModels = _mapper.Map<List<BookViewModel>>(bookList);
             return bookViewModels;
         }
 
@@ -43,6 +42,8 @@ namespace WebApi.BookOperations.GetBook{
         public string Title { get; set; }
         public string Genre { get; set; }
         public int PageCount { get; set; }
+        public int AuthorId { get; set; }
+        public string Author { get; set; }
         public string PublishDate { get; set; }
     }
 }
