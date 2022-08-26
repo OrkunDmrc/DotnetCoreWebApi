@@ -4,8 +4,8 @@ namespace WebApi.Application.BookOperations.Commands.Delete
 {
     public class DeleteBook{
         public DeleteBookModel Model { get; set; }
-        private readonly BookStoreDbContext _context;
-        public DeleteBook(BookStoreDbContext context)
+        private readonly IBookStoreDbContext _context;
+        public DeleteBook(IBookStoreDbContext context)
         {
             _context = context;
         }
@@ -15,7 +15,7 @@ namespace WebApi.Application.BookOperations.Commands.Delete
                 _context.SaveChanges();
                 return true;
             }
-            return false;
+            throw new InvalidOperationException("Data yok.");
         }
     }
 

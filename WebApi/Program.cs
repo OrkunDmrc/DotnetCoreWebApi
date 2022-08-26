@@ -18,6 +18,7 @@ builder.Services.AddSwaggerGen();
 
 //bu ise database e bağlanmadan sanki oradan değer okuyormuşıuz gibi çalışmayı sağlar.
 builder.Services.AddDbContext<BookStoreDbContext>(options => options.UseInMemoryDatabase(databaseName:"BookStoreDB"));
+builder.Services.AddScoped<IBookStoreDbContext>(provider => provider.GetService<BookStoreDbContext>());
 //bu dönüşümlerinin konfigürasyonlarını sağlar. Yani tektek sınıfları birbirine eşitlemeden hızlıca eşitler.
 //dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection --version 11.0.0
 //dotnet add package AutoMapper --version 11.0.

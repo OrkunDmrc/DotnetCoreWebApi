@@ -4,9 +4,9 @@ namespace WebApi.DbOperations.Queries{
     public class GetSpecificAuthorsQuery
     {
         public int ModelId { get; set; }
-        private readonly BookStoreDbContext _context;
+        private readonly IBookStoreDbContext _context;
         private readonly IMapper _mapper;
-        public GetSpecificAuthorsQuery(BookStoreDbContext context, IMapper mapper)
+        public GetSpecificAuthorsQuery(IBookStoreDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

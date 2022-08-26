@@ -6,9 +6,9 @@ using WebApi.Common;
 
 namespace WebApi.Application.BookOperations.Commands.UpdateBook{
     public class UpdateBook{
-        private readonly BookStoreDbContext _context;
+        private readonly IBookStoreDbContext _context;
         public UpdateBookModel Model { get; set;}
-        public UpdateBook(BookStoreDbContext context)
+        public UpdateBook(IBookStoreDbContext context)
         {
             _context = context;
         }

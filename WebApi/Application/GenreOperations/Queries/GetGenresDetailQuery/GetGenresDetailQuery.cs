@@ -5,19 +5,19 @@ namespace WebApi.Application.GenreOperations.Queries.GetGenresDetailQuery
 {
     public class GetGenresDetailQuery{
         public int GenreId { get; set; }
-        private readonly BookStoreDbContext _context;
+        private readonly IBookStoreDbContext _context;
         private readonly IMapper _mapper;
-        public GetGenresDetailQuery(BookStoreDbContext context, IMapper mapper)
+        public GetGenresDetailQuery(IBookStoreDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
         public List<GenresDetailViewModel> Handle(){
             var genre = _context.Genres.Where(g => g.IsActive && g.Id == GenreId).OrderBy(g => g.Id);
-            if(genre is not null){
-                return _mapper.Map<List<GenresDetailViewModel>>(genre);
+            if(genre is null){
+                throw new InvalidOperationException("Kitap türü bulunamadı");
             }
-            throw new InvalidOperationException("Kitap türü bulunamadı");
+            return _mapper.Map<List<GenresDetailViewModel>>(genre);
         }
     }
     public class GenresDetailViewModel{

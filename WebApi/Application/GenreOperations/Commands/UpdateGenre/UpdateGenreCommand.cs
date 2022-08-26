@@ -7,9 +7,9 @@ namespace WebApi.Application.GenreOperations.Commands.UpdateGenre{
     {
         public int GenreId { get; set; }
         public UpdateGenreModel Model { get; set; }
-        private readonly BookStoreDbContext _context;
+        private readonly IBookStoreDbContext _context;
         private readonly IMapper _mapper;
-        public UpdateGenreCommand(BookStoreDbContext contex, IMapper mapper)
+        public UpdateGenreCommand(IBookStoreDbContext contex, IMapper mapper)
         {
             _context = contex;
             _mapper = mapper;
@@ -17,7 +17,7 @@ namespace WebApi.Application.GenreOperations.Commands.UpdateGenre{
         public void Handle(){
             var genre = _context.Genres.SingleOrDefault(g => g.Id == GenreId);
             if(genre is null)
-                throw new InvalidOperationException("bu türde kategori mevcut değil");
+                throw new InvalidOperationException("bu Id de kategori mevcut değil");
             
             if(_context.Genres.Any(g => g.Name.ToLower() == Model.Name.ToLower() && g.Id != GenreId))
                 throw new InvalidOperationException("Aynı isimli bir kitap türü zaten mevcut");

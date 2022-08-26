@@ -9,12 +9,10 @@ using AutoMapper;
 
 namespace WebApi.Application.BookOperations.Queries.GetById{
     public class GetById{
-        private readonly BookStoreDbContext _context;
+        private readonly IBookStoreDbContext _context;
         private readonly IMapper _mapper;
-        
-
         public int BookId { get; set; }
-        public GetById(BookStoreDbContext context, IMapper mapper)
+        public GetById(IBookStoreDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -25,6 +23,8 @@ namespace WebApi.Application.BookOperations.Queries.GetById{
                 throw new InvalidOperationException("Kitap bulunamadı");
             }*/
             var book = _context.Books.Include(b => b.Genre).Include(b => b.Author).SingleOrDefault(b => b.Id == BookId);
+            if(book is null)
+                throw new InvalidOperationException("Kitap bulunamadı.");
             return _mapper.Map<GetByIdModel>(book);
         }
     }
