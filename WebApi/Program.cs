@@ -29,8 +29,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         //tokenın kilitleneceği anahtar bunuda kontrol et
         ValidateIssuerSigningKey = true,
         //tokenın yaratılırken ki issuer ı
+        //configuration sınıfı appsetings e bakar. tırnak içerisinde olanlar appsettings içerisinde konfigure edildi.
+        //appsettings in içerisinde : tokenı dağıtan server
         ValidIssuer = configuration["Token:Issuer"],
         ValidAudience = configuration["Token:Audience"],
+        //appsettings in içerisinden : barası uzun olmalı eğer hata alırsan burayı uzat
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:SecurityKey"])),
         //dünyadaki saat farklııklarından dolayı oluşabilecek sunucu clent arasındaki saat farkını düzenler
         ClockSkew = TimeSpan.Zero

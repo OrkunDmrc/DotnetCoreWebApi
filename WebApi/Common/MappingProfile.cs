@@ -9,6 +9,7 @@ using WebApi.Application.GenreOperations.Queries.GetGenresDetailQuery;
 
 using WebApi.Entities;
 using WebApi.DbOperations.Queries;
+using WebApi.Application.UserOperatons.Commands;
 
 namespace WebApi.Common{
     public class MappingProfile : Profile{
@@ -26,6 +27,8 @@ namespace WebApi.Common{
 
             CreateMap<Author, GetAuthorsViewModel>();
             CreateMap<Author, GetSpecificAuthorViewModel>();
+
+            CreateMap<CreateUserModel, User>();
         }
     }
 }

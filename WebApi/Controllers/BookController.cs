@@ -10,9 +10,11 @@ using AutoMapper;
 using FluentValidation.Results;
 using FluentValidation;
 using WebApi.Application.BookOperations.Commands.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]s")]
     public class BookController : ControllerBase
