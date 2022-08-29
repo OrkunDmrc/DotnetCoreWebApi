@@ -6,10 +6,36 @@ using WebApi.DbOperations;
 using System.Reflection;
 using WebApi.Middlewares;
 using WebApi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+//Authentication için 
+//dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
+//controllerdan önce yazılır.
+ConfigurationManager configuration = builder.Configuration; 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt => {
+    opt.TokenValidationParameters = new TokenValidationParameters{
+        //tokenı kimler kullanabilir
+        ValidateAudience =  true,
+        //tokenın sağlayıcısı kim
+        ValidateIssuer = true,
+        //lifetime ı kontrol et
+        ValidateLifetime = true,
+        //tokenın kilitleneceği anahtar bunuda kontrol et
+        ValidateIssuerSigningKey = true,
+        //tokenın yaratılırken ki issuer ı
+        ValidIssuer = configuration["Token:Issuer"],
+        ValidAudience = configuration["Token:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:SecurityKey"])),
+        //dünyadaki saat farklııklarından dolayı oluşabilecek sunucu clent arasındaki saat farkını düzenler
+        ClockSkew = TimeSpan.Zero
+    };
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -35,6 +61,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -50,6 +78,11 @@ using (var scope = app.Services.CreateScope()) {
 app.UseCustomExceptionMiddle();
 
 app.Run();
+
+
+
+
+
 
 /*
 Dependency Injection (DI) Kavramı (Bağımlılıkların Dışarıdan Verilmesi)
